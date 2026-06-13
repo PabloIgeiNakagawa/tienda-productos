@@ -1,0 +1,12 @@
+TIPO;NOMBRE;PRECIO;CATEGORIA
+PRODUCTO;Notebook Asus;850000;Tecnologia
+PRODUCTO;Mouse Logitech;25000;Tecnologia
+PRODUCTO;Teclado Redragon;45000;Tecnologia
+PRODUCTO;Cafetera Moulinex;120000;Electro
+PRODUCTO;Auriculares Sony;45000;Tecnologia
+PRODUCTO;Silla Ergonomica;180000;Mobiliario
+PRODUCTO;Monitor Samsung 24";320000;Tecnologia
+PRODUCTO;Impresora HP;95000;Electro
+VENDEDOR;Ana Gomez;300000;
+VENDEDOR;Carlos Perez;320000;
+VENDEDOR;Maria Lopez;280000;
