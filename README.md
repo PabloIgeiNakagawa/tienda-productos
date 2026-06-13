@@ -95,5 +95,4 @@ VENDEDOR;Ana Gomez;300000;
 ```
 
 ## Diagrama de Entidad Relación
-
-El diagrama está disponible en formato DBML para [dbdiagram.io](https://dbdiagram.io). Ver el schema compartido por chat.
+<img width="1094" height="539" alt="DER" src="https://github.com/user-attachments/assets/62ac3787-5a7c-4ca4-a0dd-d32de0c5629b" />
