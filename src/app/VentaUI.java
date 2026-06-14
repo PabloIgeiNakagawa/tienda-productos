@@ -23,7 +23,7 @@ public class VentaUI {
         this.productoService = productoService;
         this.vendedorService = vendedorService;
         this.scanner = scanner;
-        this.helper = new UIHelper(productoService, scanner);
+        this.helper = new UIHelper(scanner);
     }
 
     public void ejecutarVenta() {
@@ -124,16 +124,16 @@ public class VentaUI {
                         producto = helper.seleccionarDeLista(productoService.obtenerTodos(), "Productos");
                         break;
                     case 2:
-                        producto = helper.seleccionarProductoPorCategoria();
+                        producto = buscarPorCategoria();
                         break;
                     case 3:
-                        producto = helper.seleccionarProductoPorNombre();
+                        producto = buscarPorNombre();
                         break;
                     case 4:
-                        producto = helper.seleccionarProductoPorRangoPrecio();
+                        producto = buscarPorRangoPrecio();
                         break;
                     case 5:
-                        producto = helper.seleccionarProductoPorCodigo();
+                        producto = buscarPorCodigo();
                         break;
                     case 0:
                         return null;
@@ -152,6 +152,60 @@ public class VentaUI {
         } while (opcion != 0);
 
         return null;
+    }
+
+    private Producto buscarPorCategoria() {
+        List<String> categorias = productoService.obtenerCategorias();
+        if (categorias.isEmpty()) {
+            System.out.println("\nNo hay categorias disponibles.");
+            return null;
+        }
+
+        System.out.println("\nCategorias disponibles:");
+        System.out.println("0. Volver");
+        for (int i = 0; i < categorias.size(); i++) {
+            System.out.println((i + 1) + ". " + categorias.get(i));
+        }
+        System.out.print("Seleccione una categoria: ");
+
+        int opcion = helper.leerEntero();
+        if (opcion == 0) return null;
+        if (opcion < 1 || opcion > categorias.size()) {
+            System.out.println("Opcion invalida.");
+            return null;
+        }
+        String cat = categorias.get(opcion - 1);
+        List<Producto> resultado = productoService.buscarPorCategoria(cat);
+        return helper.seleccionarDeLista(resultado, "Productos");
+    }
+
+    private Producto buscarPorNombre() {
+        System.out.print("\nIngrese el termino a buscar en el nombre: ");
+        String termino = scanner.nextLine();
+        List<Producto> resultado = productoService.buscarPorNombre(termino);
+        return helper.seleccionarDeLista(resultado, "Productos");
+    }
+
+    private Producto buscarPorRangoPrecio() {
+        try {
+            System.out.print("\nIngrese precio minimo: ");
+            double min = Double.parseDouble(scanner.nextLine());
+            System.out.print("Ingrese precio maximo: ");
+            double max = Double.parseDouble(scanner.nextLine());
+
+            List<Producto> resultado = productoService.buscarPorRangoPrecio(min, max);
+            return helper.seleccionarDeLista(resultado, "Productos");
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Ingrese valores numericos validos.");
+            return null;
+        }
+    }
+
+    private Producto buscarPorCodigo() {
+        System.out.print("\nIngrese el codigo a buscar: ");
+        String codigo = scanner.nextLine();
+        List<Producto> resultado = productoService.buscarPorCodigoLista(codigo);
+        return helper.seleccionarDeLista(resultado, "Productos");
     }
 
     private Vendedor seleccionarVendedor() {

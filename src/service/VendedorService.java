@@ -11,8 +11,8 @@ public class VendedorService {
     private List<Vendedor> vendedores;
     private int contadorVendedores;
 
-    public VendedorService(List<Vendedor> vendedores) {
-        this.vendedores = vendedores;
+    public VendedorService() {
+        this.vendedores = new ArrayList<>();
         this.contadorVendedores = 1;
     }
 

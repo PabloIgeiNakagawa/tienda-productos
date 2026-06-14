@@ -2,7 +2,6 @@ package service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +15,7 @@ public class ProductoServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new ProductoService(new ArrayList<>());
+        service = new ProductoService();
     }
 
     @Test
@@ -111,5 +110,41 @@ public class ProductoServiceTest {
         assertEquals(2, categorias.size());
         assertTrue(categorias.contains("Tecnologia"));
         assertTrue(categorias.contains("Electro"));
+    }
+
+    @Test
+    void testRegistrar_nombreNulo_lanzaExcepcion() {
+        assertThrows(ProductoException.class,
+            () -> service.registrar(null, 25000, "Tecnologia"));
+    }
+
+    @Test
+    void testRegistrar_precioCero_lanzaExcepcion() {
+        assertThrows(ProductoException.class,
+            () -> service.registrar("Mouse", 0, "Tecnologia"));
+    }
+
+    @Test
+    void testRegistrar_categoriaVacia_lanzaExcepcion() {
+        assertThrows(ProductoException.class,
+            () -> service.registrar("Mouse", 25000, ""));
+    }
+
+    @Test
+    void testBuscarPorCategoria_caseInsensitive() throws ProductoException {
+        service.registrar("Mouse", 25000, "Tecnologia");
+
+        List<Producto> resultado = service.buscarPorCategoria("tecnologia");
+
+        assertEquals(1, resultado.size());
+    }
+
+    @Test
+    void testBuscarPorCategoria_sinResultados() throws ProductoException {
+        service.registrar("Mouse", 25000, "Tecnologia");
+
+        List<Producto> resultado = service.buscarPorCategoria("Hogar");
+
+        assertTrue(resultado.isEmpty());
     }
 }

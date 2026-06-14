@@ -11,8 +11,8 @@ public class ProductoService {
     private List<Producto> productos;
     private int contadorProductos;
 
-    public ProductoService(List<Producto> productos) {
-        this.productos = productos;
+    public ProductoService() {
+        this.productos = new ArrayList<>();
         this.contadorProductos = 1;
     }
 

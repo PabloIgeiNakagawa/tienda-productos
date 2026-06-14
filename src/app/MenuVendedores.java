@@ -13,7 +13,7 @@ public class MenuVendedores {
     public MenuVendedores(VendedorService vendedorService, Scanner scanner) {
         this.vendedorService = vendedorService;
         this.scanner = scanner;
-        this.helper = new UIHelper(null, scanner);
+        this.helper = new UIHelper(scanner);
     }
 
     public void mostrar() {

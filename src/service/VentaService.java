@@ -16,8 +16,8 @@ public class VentaService {
     private ProductoService productoService;
     private VendedorService vendedorService;
 
-    public VentaService(List<Venta> ventas, ProductoService productoService, VendedorService vendedorService) {
-        this.ventas = ventas;
+    public VentaService(ProductoService productoService, VendedorService vendedorService) {
+        this.ventas = new ArrayList<>();
         this.contadorVentas = 1;
         this.productoService = productoService;
         this.vendedorService = vendedorService;

@@ -15,7 +15,7 @@ public class MenuProductos {
     public MenuProductos(ProductoService productoService, Scanner scanner) {
         this.productoService = productoService;
         this.scanner = scanner;
-        this.helper = new UIHelper(productoService, scanner);
+        this.helper = new UIHelper(scanner);
     }
 
     public void mostrar() {
@@ -110,7 +110,7 @@ public class MenuProductos {
             }
             String cat = categorias.get(opcion - 1);
             List<Producto> resultado = productoService.buscarPorCategoria(cat);
-            helper.mostrarResultadoBusqueda(resultado);
+            helper.mostrarResultado(resultado);
         } catch (NumberFormatException e) {
             System.out.println("Error: Ingrese un numero valido.");
         }
@@ -120,7 +120,7 @@ public class MenuProductos {
         System.out.print("\nIngrese el termino a buscar en el nombre: ");
         String termino = scanner.nextLine();
         List<Producto> resultado = productoService.buscarPorNombre(termino);
-        helper.mostrarResultadoBusqueda(resultado);
+        helper.mostrarResultado(resultado);
     }
 
     private void buscarPorRangoPrecio() {
@@ -131,7 +131,7 @@ public class MenuProductos {
             double max = Double.parseDouble(scanner.nextLine());
 
             List<Producto> resultado = productoService.buscarPorRangoPrecio(min, max);
-            helper.mostrarResultadoBusqueda(resultado);
+            helper.mostrarResultado(resultado);
         } catch (NumberFormatException e) {
             System.out.println("Error: Ingrese valores numericos validos.");
         }
@@ -141,6 +141,6 @@ public class MenuProductos {
         System.out.print("\nIngrese el codigo a buscar: ");
         String codigo = scanner.nextLine();
         List<Producto> resultado = productoService.buscarPorCodigoLista(codigo);
-        helper.mostrarResultadoBusqueda(resultado);
+        helper.mostrarResultado(resultado);
     }
 }

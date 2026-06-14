@@ -2,7 +2,6 @@ package service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,12 +20,9 @@ public class VentaServiceTest {
 
     @BeforeEach
     void setUp() {
-        List<Producto> productos = new ArrayList<>();
-        List<Vendedor> vendedores = new ArrayList<>();
-        List<Venta> ventas = new ArrayList<>();
-        productoService = new ProductoService(productos);
-        vendedorService = new VendedorService(vendedores);
-        service = new VentaService(ventas, productoService, vendedorService);
+        productoService = new ProductoService();
+        vendedorService = new VendedorService();
+        service = new VentaService(productoService, vendedorService);
     }
 
     @Test
@@ -79,5 +75,34 @@ public class VentaServiceTest {
 
         assertEquals(1, service.obtenerTodas().size());
         assertEquals(1, vendedorService.buscarPorCodigo("V001").getVentas().size());
+    }
+
+    @Test
+    void testAgregarMultiplesDetalles_ok() throws Exception {
+        productoService.registrar("Mouse", 25000, "Tecnologia");
+        productoService.registrar("Teclado", 45000, "Tecnologia");
+        vendedorService.registrar("Ana", 300000);
+
+        Venta venta = service.crear("V001");
+        service.agregarDetalle(venta, "P001", 2);
+        service.agregarDetalle(venta, "P002", 1);
+
+        assertEquals(2, venta.getDetalles().size());
+        assertEquals(3, venta.getCantidadTotalProductos());
+        assertEquals(95000, venta.getTotal(), 0.01);
+    }
+
+    @Test
+    void testConfirmarVenta_vendedorTieneVentaEnSuLista() throws Exception {
+        productoService.registrar("Mouse", 25000, "Tecnologia");
+        vendedorService.registrar("Ana", 300000);
+
+        Venta venta = service.crear("V001");
+        service.agregarDetalle(venta, "P001", 1);
+        service.confirmar(venta);
+
+        List<Venta> ventasAna = vendedorService.buscarPorCodigo("V001").getVentas();
+        assertEquals(1, ventasAna.size());
+        assertEquals("VENT-1", ventasAna.get(0).getCodigoVenta());
     }
 }
