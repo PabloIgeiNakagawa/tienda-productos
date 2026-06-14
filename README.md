@@ -41,8 +41,7 @@ tienda-productos/
 │       ├── ProductoException.java
 │       └── VendedorException.java
 ├── test/
-│   └── service/              # Tests unitarios (JUnit 5)
-│       ├── TiendaServiceTest.java
+│   └── service/              # Tests unitarios e integración (JUnit 5)
 │       ├── ProductoServiceTest.java
 │       ├── VendedorServiceTest.java
 │       └── VentaServiceTest.java
