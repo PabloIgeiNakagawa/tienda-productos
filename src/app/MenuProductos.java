@@ -5,17 +5,17 @@ import java.util.Scanner;
 
 import exception.TiendaException;
 import model.Producto;
-import service.Tienda;
+import service.ProductoService;
 
 public class MenuProductos {
-    private Tienda tienda;
+    private ProductoService productoService;
     private Scanner scanner;
     private UIHelper helper;
 
-    public MenuProductos(Tienda tienda, Scanner scanner) {
-        this.tienda = tienda;
+    public MenuProductos(ProductoService productoService, Scanner scanner) {
+        this.productoService = productoService;
         this.scanner = scanner;
-        this.helper = new UIHelper(scanner);
+        this.helper = new UIHelper(productoService, scanner);
     }
 
     public void mostrar() {
@@ -67,7 +67,7 @@ public class MenuProductos {
 
     private void listarProductos() {
         System.out.println("\n--- Lista de Productos ---");
-        tienda.obtenerTodosLosProductos().forEach(System.out::println);
+        productoService.obtenerTodos().forEach(System.out::println);
     }
 
     private void registrarProducto() {
@@ -78,7 +78,7 @@ public class MenuProductos {
         String categoria = helper.leerStringNoVacio("Categoria: ");
 
         try {
-            tienda.registrarProducto(nombre, precio, categoria);
+            productoService.registrar(nombre, precio, categoria);
             System.out.println("Producto registrado con exito!");
         } catch (TiendaException e) {
             System.out.println("Error: " + e.getMessage());
@@ -86,7 +86,7 @@ public class MenuProductos {
     }
 
     private void buscarPorCategoria() {
-        List<String> categorias = tienda.obtenerCategorias();
+        List<String> categorias = productoService.obtenerCategorias();
         if (categorias.isEmpty()) {
             System.out.println("\nNo hay categorias disponibles.");
             return;
@@ -109,7 +109,7 @@ public class MenuProductos {
                 return;
             }
             String cat = categorias.get(opcion - 1);
-            List<Producto> resultado = tienda.buscarProductosPorCategoria(cat);
+            List<Producto> resultado = productoService.buscarPorCategoria(cat);
             helper.mostrarResultadoBusqueda(resultado);
         } catch (NumberFormatException e) {
             System.out.println("Error: Ingrese un numero valido.");
@@ -119,7 +119,7 @@ public class MenuProductos {
     private void buscarPorNombre() {
         System.out.print("\nIngrese el termino a buscar en el nombre: ");
         String termino = scanner.nextLine();
-        List<Producto> resultado = tienda.buscarProductosPorNombre(termino);
+        List<Producto> resultado = productoService.buscarPorNombre(termino);
         helper.mostrarResultadoBusqueda(resultado);
     }
 
@@ -130,7 +130,7 @@ public class MenuProductos {
             System.out.print("Ingrese precio maximo: ");
             double max = Double.parseDouble(scanner.nextLine());
 
-            List<Producto> resultado = tienda.buscarProductosPorRangoPrecio(min, max);
+            List<Producto> resultado = productoService.buscarPorRangoPrecio(min, max);
             helper.mostrarResultadoBusqueda(resultado);
         } catch (NumberFormatException e) {
             System.out.println("Error: Ingrese valores numericos validos.");
@@ -140,7 +140,7 @@ public class MenuProductos {
     private void buscarPorCodigo() {
         System.out.print("\nIngrese el codigo a buscar: ");
         String codigo = scanner.nextLine();
-        List<Producto> resultado = tienda.buscarProductosPorCodigo(codigo);
+        List<Producto> resultado = productoService.buscarPorCodigoLista(codigo);
         helper.mostrarResultadoBusqueda(resultado);
     }
 }

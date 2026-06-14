@@ -3,17 +3,17 @@ package app;
 import java.util.Scanner;
 
 import exception.TiendaException;
-import service.Tienda;
+import service.VendedorService;
 
 public class MenuVendedores {
-    private Tienda tienda;
+    private VendedorService vendedorService;
     private Scanner scanner;
     private UIHelper helper;
 
-    public MenuVendedores(Tienda tienda, Scanner scanner) {
-        this.tienda = tienda;
+    public MenuVendedores(VendedorService vendedorService, Scanner scanner) {
+        this.vendedorService = vendedorService;
         this.scanner = scanner;
-        this.helper = new UIHelper(scanner);
+        this.helper = new UIHelper(null, scanner);
     }
 
     public void mostrar() {
@@ -49,7 +49,7 @@ public class MenuVendedores {
 
     private void listarVendedores() {
         System.out.println("\n--- Lista de Vendedores ---");
-        tienda.obtenerTodosLosVendedores().forEach(System.out::println);
+        vendedorService.obtenerTodos().forEach(System.out::println);
     }
 
     private void registrarVendedor() {
@@ -59,7 +59,7 @@ public class MenuVendedores {
         double sueldo = helper.leerDoublePositivo("Sueldo Base: ");
 
         try {
-            tienda.registrarVendedor(nombre, sueldo);
+            vendedorService.registrar(nombre, sueldo);
             System.out.println("Vendedor registrado con exito!");
         } catch (TiendaException e) {
             System.out.println("Error: " + e.getMessage());

@@ -7,17 +7,23 @@ import exception.TiendaException;
 import model.Producto;
 import model.Vendedor;
 import model.Venta;
-import service.Tienda;
+import service.ProductoService;
+import service.VentaService;
+import service.VendedorService;
 
 public class VentaUI {
-    private Tienda tienda;
+    private VentaService ventaService;
+    private ProductoService productoService;
+    private VendedorService vendedorService;
     private Scanner scanner;
     private UIHelper helper;
 
-    public VentaUI(Tienda tienda, Scanner scanner) {
-        this.tienda = tienda;
+    public VentaUI(VentaService ventaService, ProductoService productoService, VendedorService vendedorService, Scanner scanner) {
+        this.ventaService = ventaService;
+        this.productoService = productoService;
+        this.vendedorService = vendedorService;
         this.scanner = scanner;
-        this.helper = new UIHelper(scanner);
+        this.helper = new UIHelper(productoService, scanner);
     }
 
     public void ejecutarVenta() {
@@ -29,7 +35,7 @@ public class VentaUI {
         }
 
         try {
-            Venta venta = tienda.crearVenta(vendedor.getCodigo());
+            Venta venta = ventaService.crear(vendedor.getCodigo());
             boolean agregandoProductos = true;
 
             while (agregandoProductos) {
@@ -43,7 +49,7 @@ public class VentaUI {
                 }
 
                 int cantidad = leerCantidad();
-                tienda.agregarDetalleAVenta(venta, producto.getCodigo(), cantidad);
+                ventaService.agregarDetalle(venta, producto.getCodigo(), cantidad);
                 System.out.println("Producto agregado: " + producto.getNombre() + " x" + cantidad);
 
                 System.out.print("\nDesea agregar otro producto? (S/N): ");
@@ -62,7 +68,7 @@ public class VentaUI {
     }
 
     public void mostrarComision() {
-        List<Vendedor> vendedores = tienda.obtenerTodosLosVendedores();
+        List<Vendedor> vendedores = vendedorService.obtenerTodos();
 
         if (vendedores.isEmpty()) {
             System.out.println("\nNo hay vendedores disponibles.");
@@ -87,7 +93,7 @@ public class VentaUI {
             }
 
             String codVend = vendedores.get(opcion - 1).getCodigo();
-            double comision = tienda.calcularComisionVendedor(codVend);
+            double comision = vendedorService.calcularComision(codVend);
             System.out.printf("La comision acumulada para %s es: $%,.0f\n",
                 vendedores.get(opcion - 1).getNombre(), comision);
         } catch (NumberFormatException e) {
@@ -115,19 +121,19 @@ public class VentaUI {
 
                 switch (opcion) {
                     case 1:
-                        producto = helper.seleccionarDeLista(tienda.obtenerTodosLosProductos(), "Productos");
+                        producto = helper.seleccionarDeLista(productoService.obtenerTodos(), "Productos");
                         break;
                     case 2:
-                        producto = helper.seleccionarProductoPorCategoria(tienda);
+                        producto = helper.seleccionarProductoPorCategoria();
                         break;
                     case 3:
-                        producto = helper.seleccionarProductoPorNombre(tienda);
+                        producto = helper.seleccionarProductoPorNombre();
                         break;
                     case 4:
-                        producto = helper.seleccionarProductoPorRangoPrecio(tienda);
+                        producto = helper.seleccionarProductoPorRangoPrecio();
                         break;
                     case 5:
-                        producto = helper.seleccionarProductoPorCodigo(tienda);
+                        producto = helper.seleccionarProductoPorCodigo();
                         break;
                     case 0:
                         return null;
@@ -149,7 +155,7 @@ public class VentaUI {
     }
 
     private Vendedor seleccionarVendedor() {
-        List<Vendedor> vendedores = tienda.obtenerTodosLosVendedores();
+        List<Vendedor> vendedores = vendedorService.obtenerTodos();
 
         if (vendedores.isEmpty()) {
             System.out.println("\nNo hay vendedores disponibles.");
@@ -211,7 +217,7 @@ public class VentaUI {
         System.out.print("\nConfirmar venta? (S/N): ");
         String confirmar = scanner.nextLine().trim().toUpperCase();
         if (confirmar.equals("S")) {
-            tienda.confirmarVenta(venta);
+            ventaService.confirmar(venta);
             System.out.println("Venta registrada con exito!");
         } else {
             System.out.println("Venta cancelada.");

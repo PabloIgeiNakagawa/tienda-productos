@@ -5,11 +5,12 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import exception.TiendaException;
-import service.Tienda;
+import service.ProductoService;
+import service.VendedorService;
 
 public class CargadorDatos {
 
-    public static void cargar(String rutaArchivo, Tienda service) {
+    public static void cargar(String rutaArchivo, ProductoService productoService, VendedorService vendedorService) {
         try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
             String linea;
             int numLinea = 0;
@@ -37,11 +38,11 @@ public class CargadorDatos {
                     switch (tipo) {
                         case "PRODUCTO":
                             double precio = Double.parseDouble(precioStr);
-                            service.registrarProducto(nombre, precio, categoriaStr);
+                            productoService.registrar(nombre, precio, categoriaStr);
                             break;
                         case "VENDEDOR":
                             double sueldo = Double.parseDouble(precioStr);
-                            service.registrarVendedor(nombre, sueldo);
+                            vendedorService.registrar(nombre, sueldo);
                             break;
                         default:
                             System.out.println("Linea " + numLinea + ": tipo desconocido '" + tipo + "', se omite.");
@@ -58,19 +59,19 @@ public class CargadorDatos {
         } catch (IOException e) {
             System.out.println("No se pudo cargar el archivo '" + rutaArchivo + "': " + e.getMessage());
             System.out.println("Cargando datos por defecto...");
-            cargarDatosPorDefecto(service);
+            cargarDatosPorDefecto(productoService, vendedorService);
         }
     }
 
-    private static void cargarDatosPorDefecto(Tienda service) {
+    private static void cargarDatosPorDefecto(ProductoService productoService, VendedorService vendedorService) {
         try {
-            service.registrarProducto("Notebook Asus", 850000, "Tecnologia");
-            service.registrarProducto("Mouse Logitech", 25000, "Tecnologia");
-            service.registrarProducto("Teclado Redragon", 45000, "Tecnologia");
-            service.registrarProducto("Cafetera Moulinex", 120000, "Electro");
+            productoService.registrar("Notebook Asus", 850000, "Tecnologia");
+            productoService.registrar("Mouse Logitech", 25000, "Tecnologia");
+            productoService.registrar("Teclado Redragon", 45000, "Tecnologia");
+            productoService.registrar("Cafetera Moulinex", 120000, "Electro");
 
-            service.registrarVendedor("Ana Gomez", 300000);
-            service.registrarVendedor("Carlos Perez", 320000);
+            vendedorService.registrar("Ana Gomez", 300000);
+            vendedorService.registrar("Carlos Perez", 320000);
         } catch (TiendaException e) {
             System.out.println("Error cargando datos por defecto: " + e.getMessage());
         }

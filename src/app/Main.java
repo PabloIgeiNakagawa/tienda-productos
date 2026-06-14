@@ -2,18 +2,28 @@ package app;
 
 import java.util.Scanner;
 
+import service.ProductoService;
 import service.Tienda;
+import service.VentaService;
+import service.VendedorService;
 import service.util.CargadorDatos;
 
 public class Main {
-    private static Tienda tienda = new Tienda();
+    private static ProductoService productoService;
+    private static VendedorService vendedorService;
+    private static VentaService ventaService;
     private static Scanner scanner = new Scanner(System.in);
     private static boolean datosCargados = false;
 
     public static void main(String[] args) {
-        MenuProductos menuProductos = new MenuProductos(tienda, scanner);
-        MenuVendedores menuVendedores = new MenuVendedores(tienda, scanner);
-        VentaUI ventaUI = new VentaUI(tienda, scanner);
+        Tienda tienda = Tienda.crear();
+        productoService = tienda.getProductoService();
+        vendedorService = tienda.getVendedorService();
+        ventaService = tienda.getVentaService();
+
+        MenuProductos menuProductos = new MenuProductos(productoService, scanner);
+        MenuVendedores menuVendedores = new MenuVendedores(vendedorService, scanner);
+        VentaUI ventaUI = new VentaUI(ventaService, productoService, vendedorService, scanner);
 
         int opcion = 0;
 
@@ -64,10 +74,10 @@ public class Main {
             System.out.println("Los datos ya fueron cargados anteriormente.");
             return;
         }
-        CargadorDatos.cargar("data.csv", tienda);
+        CargadorDatos.cargar("data.csv", productoService, vendedorService);
         datosCargados = true;
         System.out.println("Datos cargados: " +
-            tienda.obtenerTodosLosProductos().size() + " productos, " +
-            tienda.obtenerTodosLosVendedores().size() + " vendedores.");
+            productoService.obtenerTodos().size() + " productos, " +
+            vendedorService.obtenerTodos().size() + " vendedores.");
     }
 }

@@ -1,7 +1,9 @@
 package exception;
 
 public class VendedorException extends TiendaException {
-    public VendedorException(String mensaje) {
+    private static final long serialVersionUID = 1L;
+
+	public VendedorException(String mensaje) {
         super(mensaje);
     }
 }

@@ -1,7 +1,9 @@
 package exception;
 
 public class ProductoException extends TiendaException {
-    public ProductoException(String mensaje) {
+    private static final long serialVersionUID = 1L;
+
+	public ProductoException(String mensaje) {
         super(mensaje);
     }
 }

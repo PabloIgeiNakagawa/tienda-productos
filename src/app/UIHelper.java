@@ -3,14 +3,15 @@ package app;
 import java.util.List;
 import java.util.Scanner;
 
-import exception.TiendaException;
 import model.Producto;
-import service.Tienda;
+import service.ProductoService;
 
 public class UIHelper {
+    private ProductoService productoService;
     private Scanner scanner;
 
-    public UIHelper(Scanner scanner) {
+    public UIHelper(ProductoService productoService, Scanner scanner) {
+        this.productoService = productoService;
         this.scanner = scanner;
     }
 
@@ -78,8 +79,9 @@ public class UIHelper {
         return items.get(opcion - 1);
     }
 
-    public Producto seleccionarProductoPorCategoria(Tienda tienda) {
-        List<String> categorias = tienda.obtenerCategorias();
+    public Producto seleccionarProductoPorCategoria() {
+        if (productoService == null) return null;
+        List<String> categorias = productoService.obtenerCategorias();
         if (categorias.isEmpty()) {
             System.out.println("\nNo hay categorias disponibles.");
             return null;
@@ -101,25 +103,27 @@ public class UIHelper {
             return null;
         }
         String cat = categorias.get(opcion - 1);
-        List<Producto> resultado = tienda.buscarProductosPorCategoria(cat);
+        List<Producto> resultado = productoService.buscarPorCategoria(cat);
         return seleccionarDeLista(resultado, "Productos");
     }
 
-    public Producto seleccionarProductoPorNombre(Tienda tienda) {
+    public Producto seleccionarProductoPorNombre() {
+        if (productoService == null) return null;
         System.out.print("\nIngrese el termino a buscar en el nombre: ");
         String termino = scanner.nextLine();
-        List<Producto> resultado = tienda.buscarProductosPorNombre(termino);
+        List<Producto> resultado = productoService.buscarPorNombre(termino);
         return seleccionarDeLista(resultado, "Productos");
     }
 
-    public Producto seleccionarProductoPorRangoPrecio(Tienda tienda) {
+    public Producto seleccionarProductoPorRangoPrecio() {
+        if (productoService == null) return null;
         try {
             System.out.print("\nIngrese precio minimo: ");
             double min = Double.parseDouble(scanner.nextLine());
             System.out.print("Ingrese precio maximo: ");
             double max = Double.parseDouble(scanner.nextLine());
 
-            List<Producto> resultado = tienda.buscarProductosPorRangoPrecio(min, max);
+            List<Producto> resultado = productoService.buscarPorRangoPrecio(min, max);
             return seleccionarDeLista(resultado, "Productos");
         } catch (NumberFormatException e) {
             System.out.println("Error: Ingrese valores numericos validos.");
@@ -127,10 +131,11 @@ public class UIHelper {
         }
     }
 
-    public Producto seleccionarProductoPorCodigo(Tienda tienda) {
+    public Producto seleccionarProductoPorCodigo() {
+        if (productoService == null) return null;
         System.out.print("\nIngrese el codigo a buscar: ");
         String codigo = scanner.nextLine();
-        List<Producto> resultado = tienda.buscarProductosPorCodigo(codigo);
+        List<Producto> resultado = productoService.buscarPorCodigoLista(codigo);
         return seleccionarDeLista(resultado, "Productos");
     }
 
